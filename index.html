@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cashback · TACO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand-navy: #1c2c4a;
+    --brand-teal: #6aaec3;
+    --brand-magenta: #d00c65;
+    --brand-orange: #e27b37;
+    --brand-lime: #c2d841;
+    --brand-jeans: #3a5a8a;
+    --brand-jeans-dark: #2c4568;
+    --brand-line: #e8e6da;
+    --brand-muted: #6f7584;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Tema padrão (o de hoje) */
+    --page-bg: #0C2340;
+    --page-bg-2: #0C2340;
+    --text: var(--brand-navy);
+    --on-bg: #ffffff;
+    --on-bg-soft: rgba(255,255,255,.75);
+    --accent: var(--brand-jeans);
+    --accent-dark: var(--brand-jeans-dark);
+    --accent-text: #ffffff;
+    --hi: #ff5c52;
+    --ribbon: #d1352b;
+    --card-glow: rgba(255,255,255,.18);
+    --tint: transparent;
+  }
+
+  /* ===== BLACK FRIDAY ===== */
+  /* Segue o KV oficial: tecido preto, letras brancas e o vermelho do selo TACO */
+  body[data-tema="bf"]{
+    --page-bg: #0a0a0a;
+    --page-bg-2: #0a0a0a;
+    --on-bg-soft: rgba(255,255,255,.75);
+    --accent: #d90a12;
+    --accent-dark: #b0080e;
+    --accent-text: #ffffff;
+    --hi: #ff4a44;
+    --ribbon: #d90a12;
+    --card-glow: rgba(255,255,255,.22);
+    --tint: transparent;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.75) 100%),
+      url('bf-textura.jpg') center top / cover fixed,
+      #0a0a0a;
+  }
+  /* ===== NATAL ===== */
+  body[data-tema="natal"]{
+    --page-bg: #0f2a22;
+    --page-bg-2: #0C2340;
+    --on-bg-soft: rgba(255,255,255,.78);
+    --accent: #c8202f;
+    --accent-dark: #a01824;
+    --accent-text: #ffffff;
+    --hi: #f2c14e;
+    --ribbon: #c8202f;
+    --card-glow: rgba(242,193,78,.6);
+    --tint: linear-gradient(180deg, rgba(15,42,34,.1) 0%, rgba(15,42,34,.8) 100%);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; color:var(--text);
+    font-family:var(--font); padding:0 0 70px;
+    min-height:100vh;
+    background: linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-2) 100%);
+    background-attachment: fixed;
+    overflow-x:hidden;
+  }
+  .wrap{ max-width:460px; margin:0 auto; padding:20px 20px 0; position:relative; z-index:1; }
+
+  /* Faixa sazonal no topo */
+  .faixa{ display:none; overflow:hidden; white-space:nowrap; font-weight:900; font-size:13px;
+    letter-spacing:.14em; text-transform:uppercase; padding:9px 0; position:relative; z-index:1; }
+  .faixa-track{ display:inline-block; animation: corre 22s linear infinite; }
+  .faixa-track span{ padding:0 18px; }
+  body[data-tema="bf"] .faixa{ display:block; background:#d90a12; color:#fff; }
+  body[data-tema="natal"] .faixa{ display:block; background:#c8202f; color:#fff; }
+  @keyframes corre{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* Cabeçalho com foto */
+  .header-img{ border-radius:18px; overflow:hidden; margin-bottom:20px; position:relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+  .header-img img{ width:100%; height:160px; object-fit:cover; object-position:50% 22%; display:block; }
+  .header-img::after{ content:""; position:absolute; inset:0; background:var(--tint); }
+  .selo{ display:none; position:absolute; left:16px; bottom:14px; z-index:2; color:#fff;
+    font-weight:900; line-height:.95; text-transform:uppercase; letter-spacing:.02em; }
+  .selo small{ display:block; font-size:11px; font-weight:700; letter-spacing:.18em; opacity:.9; margin-bottom:4px; }
+  .selo b{ display:block; font-size:30px; }
+  body[data-tema="natal"] .selo{ display:block; }
+  body[data-tema="bf"] .header-img{ box-shadow:none; background:transparent; border-radius:0; margin:-16px 0 0; }
+  body[data-tema="bf"] .header-img img{ height:auto; object-fit:contain;
+    -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 50%, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 60% at 50% 50%, #000 62%, transparent 100%); }
+  body[data-tema="bf"] .header-img::after{ display:none; }
+  body[data-tema="natal"] .selo b span{ color:#f2c14e; }
+
+  .title-block{ text-align:center; margin-bottom:6px; }
+  .title-block h1{ font-weight:800; font-size:32px; color:var(--on-bg); margin:0; letter-spacing:-.2px; line-height:1.1; }
+  .title-block .subtitle{ font-weight:500; font-size:14px; color:var(--on-bg-soft); margin-top:6px; }
+  .sub{ color:var(--on-bg-soft); font-size:13.5px; line-height:1.55; margin:16px 0 18px; text-align:center; }
+
+  .panel{ background:#fff; border:1px solid var(--brand-line); border-radius:16px;
+    padding:22px; margin-bottom:18px; box-shadow:0 8px 24px rgba(0,0,0,.25); }
+  label{ display:block; font-weight:600; font-size:12.5px; color:var(--text); opacity:.75; margin-bottom:6px; }
+  input[type=text]{ width:100%; background:#fff; border:1.5px solid var(--brand-line); border-radius:12px;
+    padding:13px 14px; color:var(--text); font-family:var(--font); font-size:16px; }
+  input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(58,90,138,.2); }
+
+  .btn{ font-family:var(--font); font-size:15px; font-weight:700; background:var(--accent); color:var(--accent-text);
+    border:none; border-radius:12px; padding:14px 20px; cursor:pointer; transition:.15s; width:100%; margin-top:14px; }
+  .btn:hover{ background:var(--accent-dark); }
+  .btn:disabled{ background:#d8dce3; color:#8a91a0; cursor:not-allowed; }
+
+  .msg{ font-size:13px; padding:12px 14px; border-radius:10px; margin-top:14px; line-height:1.5; }
+  .msg.err{ background:#fdeceb; border:1px solid #f3c9c4; color:#a83c32; }
+  .msg.info{ background:#eef0f5; border:1px solid #d7dbe6; color:#4f5866; }
+
+  #resultado{ display:none; }
+
+  .saldo-card{ background: rgba(255,255,255,.08); backdrop-filter: blur(6px);
+    border:1.5px solid var(--card-glow); border-radius:18px; padding:22px; color:#fff; margin-bottom:18px; position:relative; }
+  body[data-tema="bf"] .saldo-card{ background: rgba(0,0,0,.55); box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+  body[data-tema="bf"] .saldo-card::before{ content:""; position:absolute; left:22px; right:22px; top:-1.5px; height:3px; background:#d90a12; border-radius:2px; }
+  body[data-tema="natal"] .saldo-card{ box-shadow: 0 10px 40px rgba(242,193,78,.18); }
+  .saldo-label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.8; }
+  .saldo-valor{ font-size:38px; font-weight:800; margin-top:4px; letter-spacing:-.5px; }
+  .saldo-venc{ font-size:15px; opacity:.95; margin-top:10px; }
+  .saldo-venc strong{ font-weight:700; color:var(--hi); }
+  .saldo-urg{ display:none; margin-top:14px; font-size:13px; font-weight:700; padding:8px 12px; border-radius:999px;
+    background:rgba(255,255,255,.12); width:fit-content; }
+  .saldo-chamada{ display:none; margin-top:14px; font-size:14px; line-height:1.45; color:#fff; opacity:.92; }
+  body[data-tema="bf"] .saldo-chamada, body[data-tema="natal"] .saldo-chamada{ display:block; }
+
+  .cat-title{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--on-bg-soft); margin:22px 0 12px; }
+
+  .cat-card{ display:block; background:#fff; border:1px solid var(--brand-line); border-radius:14px; overflow:hidden;
+    margin-bottom:10px; box-shadow:0 4px 14px rgba(0,0,0,.18); text-decoration:none; }
+  .cat-ribbon{ background:var(--ribbon); color:#fff; font-weight:800; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.06em; text-align:center; padding:5px 10px; }
+  .cat-body{ display:flex; align-items:center; gap:14px; padding:12px 14px; }
+  .cat-img{ width:56px; height:56px; border-radius:10px; object-fit:cover; background:#f4f1e6; flex-shrink:0; }
+  .cat-info{ flex:1; min-width:0; }
+  .cat-nome{ font-weight:700; font-size:13.5px; color:var(--text); }
+  .cat-preco{ font-size:11.5px; color:var(--brand-muted); margin-top:2px; }
+  .cat-pct{ font-weight:800; font-size:16px; color:var(--accent); flex-shrink:0; text-align:right; white-space:nowrap; }
+  body[data-tema="natal"] .cat-pct{ color:#a01824; }
+  .cat-pct .cat-pct-label, .cat-pct small{ display:block; font-size:9.5px; font-weight:600; color:var(--brand-muted); text-transform:uppercase; letter-spacing:.03em; }
+
+  .cta-box{ background: rgba(255,255,255,.08); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,.18);
+    border-radius:16px; padding:22px; text-align:center; margin-top:24px; }
+  .cta-box p{ color:#fff; font-size:13.5px; line-height:1.5; margin:0 0 14px; }
+  .cta-box .btn{ background:#fff; color:var(--brand-jeans-dark); }
+  body[data-tema="bf"] .cta-box .btn{ background:#d90a12; color:#fff; }
+  body[data-tema="bf"] .cta-box{ background: rgba(0,0,0,.55); }
+  body[data-tema="natal"] .cta-box .btn{ background:#c8202f; color:#fff; }
+  .cta-box .btn:hover{ filter:brightness(.95); }
+
+  .disclaimer{ font-size:11px; color:rgba(255,255,255,.62); text-align:center; line-height:1.5; margin-top:20px; }
+  .terms-box{ margin-top:26px; padding-top:18px; border-top:1px solid rgba(255,255,255,.15); }
+  .terms-title{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.75); margin-bottom:10px; text-align:center; }
+  .terms-box ul{ margin:0; padding:0 0 0 16px; }
+  .terms-box li{ font-size:10.5px; color:rgba(255,255,255,.58); line-height:1.6; margin-bottom:6px; }
+  footer{ text-align:center; margin-top:24px; color:rgba(255,255,255,.5); font-size:11px; }
+
+  /* Neve (só no Natal) */
+  .neve{ display:none; position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  body[data-tema="natal"] .neve{ display:block; }
+  .neve i{ position:absolute; top:-10px; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.75);
+    animation: cai linear infinite; }
+  @keyframes cai{ to{ transform: translate3d(30px, 105vh, 0); } }
+  @media (prefers-reduced-motion: reduce){
+    .faixa-track, .neve i{ animation:none; }
+    .neve{ display:none !important; }
+  }
+
+  /* Barra de pré-visualização (só aparece quando PREVIEW = true) */
+  .preview-bar{ display:none; position:sticky; top:0; z-index:5; background:#111; color:#fff; font-size:12px;
+    padding:8px 12px; gap:6px; justify-content:center; align-items:center; flex-wrap:wrap; }
+  .preview-bar button{ font-family:var(--font); font-size:12px; font-weight:700; border-radius:999px; border:1px solid #555;
+    background:transparent; color:#fff; padding:6px 12px; cursor:pointer; }
+  .preview-bar button.on{ background:#fff; color:#111; }
+</style>
+</head>
+<body data-tema="padrao">
+
+<div class="preview-bar" id="previewBar">
+  <span>Pré-visualizar:</span>
+  <button data-t="bf">Black Friday</button>
+  <button data-t="natal">Natal</button>
+  <button data-t="padrao">Padrão</button>
+</div>
+
+<div class="neve" id="neve" aria-hidden="true"></div>
+
+<div class="faixa" aria-hidden="true"><div class="faixa-track" id="faixaTrack"></div></div>
+
+<div class="wrap">
+
+  <div class="header-img">
+    <img id="headerImg" src="taco-header.jpg" alt="Loja TACO">
+    <div class="selo" id="selo"></div>
+  </div>
+
+  <div class="title-block">
+    <h1 id="titulo">Meu Cashback</h1>
+    <div class="subtitle" id="subtitulo">Consulte seu saldo</div>
+  </div>
+  <div class="sub" id="intro">Digite seu CPF e veja quanto de desconto você pode conseguir em cada categoria de produto.</div>
+
+  <div class="panel">
+    <label for="cpfInput">CPF</label>
+    <input type="text" id="cpfInput" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
+    <button class="btn" id="btnConsultar">Consultar saldo</button>
+    <div id="formMsg"></div>
+  </div>
+
+  <div id="resultado">
+    <div class="saldo-card">
+      <div class="saldo-label">Seu saldo de cashback</div>
+      <div class="saldo-valor" id="saldoValor">R$ 0,00</div>
+      <div class="saldo-venc" id="saldoVenc"></div>
+      <div class="saldo-urg" id="saldoUrg"></div>
+      <div class="saldo-chamada" id="saldoChamada"></div>
+    </div>
+
+    <div class="cat-title" id="catTitulo">Saiba quanto seu desconto pode valer nas nossas principais categorias</div>
+
+    <div id="categoriasList"></div>
+
+    <div class="disclaimer">
+      O desconto é calculado com base no produto de menor valor de cada categoria e respeita o limite de resgate de até 20% do valor da compra. Em peças de maior valor, o valor em reais se mantém, mas o percentual pode ser menor. Consulte condições na loja.
+    </div>
+
+    <div class="cta-box">
+      <p id="ctaTexto">Visite a sua loja TACO favorita para usar seu crédito ou a nossa loja mais próxima.</p>
+      <a class="btn" style="display:inline-block; width:auto; text-decoration:none;" href="https://www.taco.com.br/institucional/nossas-lojas" target="_blank" rel="noopener">Veja nossas lojas mais próximas</a>
+    </div>
+
+    <div class="terms-box">
+      <div class="terms-title">Termos e condições</div>
+      <ul>
+        <li>Seus dados são tratados de acordo com a LGPD. Somente a TACO tem acesso e direito de uso dessas informações.</li>
+        <li>Os créditos de cashback apresentados aqui valem exclusivamente para compras nas lojas físicas da TACO — não são válidos para o e-commerce.</li>
+        <li>Em caso de dúvidas sobre seu saldo ou vencimento, entre em contato com a loja mais próxima.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>TACO · Programa de Cashback</footer>
+</div>
+
+<script>
+// ==== CONFIG ====
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxfEJt3ML1mvVQVO1tuebRbfMwHtXt2ftwaxAcQAEuGb3-hxfnXeQDXQKxP1xYmJZdjQ/exec";
+
+// Calendário dos temas (troca sozinho pela data do celular do cliente).
+// Fora dessas datas, a página volta ao visual de sempre.
+const TEMAS_CALENDARIO = [
+  { tema: 'bf',    de: '2026-11-16', ate: '2026-11-30' },
+  { tema: 'natal', de: '2026-12-01', ate: '2026-12-25' },
+];
+const PREVIEW = false; // true = mostra barra para alternar temas e um saldo de exemplo
+
+const TEXTOS = {
+  padrao: {
+    titulo: 'Meu Cashback',
+    subtitulo: 'Consulte seu saldo',
+    intro: 'Digite seu CPF e veja quanto de desconto você pode conseguir em cada categoria de produto.',
+    selo: '',
+    faixa: '',
+    chamada: '',
+    catTitulo: 'Saiba quanto seu desconto pode valer nas nossas principais categorias',
+    cta: 'Visite a sua loja TACO favorita para usar seu crédito ou a nossa loja mais próxima.',
+  },
+  bf: {
+    titulo: 'Seu cashback tá te esperando!',
+    subtitulo: 'Consulte quanto você tem pra gastar',
+    intro: 'Digite seu CPF e veja quanto de crédito você já tem pra usar nas lojas TACO nesta Black Friday.',
+    selo: '',
+    faixa: 'Black Friday TACO ✦ Seu cashback vale nas lojas ✦ ',
+    chamada: 'Seu crédito já está liberado. Passe na loja e use na Black Friday.',
+    catTitulo: 'Quanto seu crédito vale nas categorias mais procuradas',
+    cta: 'Corre pra loja TACO mais perto de você e use seu crédito na Black Friday.',
+  },
+  natal: {
+    titulo: 'Seu presente de <span style="color:#f2c14e">Natal</span> já chegou',
+    subtitulo: 'Consulte seu saldo de cashback',
+    intro: 'Digite seu CPF e veja quanto de crédito você tem pra usar nos presentes de Natal.',
+    selo: '<small>Feliz</small><b><span>Natal</span><br>TACO</b>',
+    faixa: 'Natal TACO ✦ Use seu cashback nos presentes ✦ ',
+    chamada: 'Use seu crédito nos presentes de Natal, em qualquer loja TACO.',
+    catTitulo: 'Ideias de presente e quanto seu crédito vale em cada uma',
+    cta: 'Escolha os presentes de Natal na loja TACO mais perto de você e use seu crédito.',
+  },
+};
+
+function temaDeHoje(){
+  const hoje = new Date();
+  const ymd = hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0') + '-' + String(hoje.getDate()).padStart(2,'0');
+  const qs = new URLSearchParams(location.search).get('tema');
+  if (qs && TEXTOS[qs]) return qs;
+  const t = TEMAS_CALENDARIO.find(x => ymd >= x.de && ymd <= x.ate);
+  return t ? t.tema : 'padrao';
+}
+
+let temaAtual = 'padrao';
+function aplicarTema(tema){
+  temaAtual = tema;
+  const t = TEXTOS[tema];
+  document.body.dataset.tema = tema;
+  document.getElementById('headerImg').src = tema === 'bf' ? 'bf-kv.jpg' : 'taco-header.jpg';
+  document.getElementById('headerImg').alt = tema === 'bf' ? 'Black Friday TACO' : 'Loja TACO';
+  document.getElementById('titulo').innerHTML = t.titulo;
+  document.getElementById('subtitulo').textContent = t.subtitulo;
+  document.getElementById('intro').textContent = t.intro;
+  document.getElementById('selo').innerHTML = t.selo;
+  document.getElementById('faixaTrack').innerHTML = t.faixa ? ('<span>' + t.faixa.repeat(6) + '</span>').repeat(2) : '';
+  document.getElementById('saldoChamada').textContent = t.chamada;
+  document.getElementById('catTitulo').textContent = t.catTitulo;
+  document.getElementById('ctaTexto').textContent = t.cta;
+  document.querySelectorAll('#previewBar button').forEach(b => b.classList.toggle('on', b.dataset.t === tema));
+}
+
+// Neve leve, só desenhada uma vez
+(function(){
+  const box = document.getElementById('neve');
+  for (let i = 0; i < 28; i++){
+    const f = document.createElement('i');
+    const s = 3 + Math.random()*5;
+    f.style.left = (Math.random()*100) + 'vw';
+    f.style.width = f.style.height = s + 'px';
+    f.style.opacity = (.35 + Math.random()*.5).toFixed(2);
+    f.style.animationDuration = (9 + Math.random()*10).toFixed(1) + 's';
+    f.style.animationDelay = (-Math.random()*18).toFixed(1) + 's';
+    box.appendChild(f);
+  }
+})();
+
+aplicarTema(temaDeHoje());
+
+const cpfInput = document.getElementById('cpfInput');
+const btnConsultar = document.getElementById('btnConsultar');
+const formMsg = document.getElementById('formMsg');
+const resultado = document.getElementById('resultado');
+
+cpfInput.addEventListener('input', () => {
+  let v = cpfInput.value.replace(/\D/g,'').slice(0,11);
+  if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/, '$1.$2');
+  cpfInput.value = v;
+});
+cpfInput.addEventListener('keydown', e => { if (e.key === 'Enter') consultar(); });
+btnConsultar.addEventListener('click', consultar);
+
+function mostrarResultado(data){
+  document.getElementById('saldoValor').textContent =
+    'R$ ' + data.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+  const vencEl = document.getElementById('saldoVenc');
+  const urgEl = document.getElementById('saldoUrg');
+  urgEl.style.display = 'none';
+  if (data.vencimento){
+    const d = new Date(data.vencimento);
+    vencEl.innerHTML = `Válido até <strong>${d.toLocaleDateString('pt-BR')}</strong>`;
+    const hoje = new Date(); hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+    const dias = Math.round((d - hoje) / 86400000);
+    if (dias >= 0 && dias <= 15){
+      urgEl.textContent = dias === 0 ? '⏳ Vence hoje' : (dias === 1 ? '⏳ Vence amanhã' : `⏳ Faltam ${dias} dias pra usar`);
+      urgEl.style.display = 'block';
+    }
+  } else {
+    vencEl.innerHTML = '';
+  }
+
+  const list = document.getElementById('categoriasList');
+  list.innerHTML = data.categorias.map(cat => {
+    if (!cat.disponivel){
+      return `
+        <div class="cat-card">
+          <div class="cat-body">
+            <div class="cat-img"></div>
+            <div class="cat-info">
+              <div class="cat-nome">${cat.nome}</div>
+              <div class="cat-preco">em breve</div>
+            </div>
+          </div>
+        </div>`;
+    }
+    const inner = `
+      ${cat.ribbon ? `<div class="cat-ribbon">${cat.ribbon}</div>` : ''}
+      <div class="cat-body">
+        <img class="cat-img" src="${cat.imagem}" alt="${cat.nome}" onerror="this.style.display='none'">
+        <div class="cat-info">
+          <div class="cat-nome">${cat.nome}</div>
+          <div class="cat-preco">Preço médio estimado: R$ ${cat.precoMin.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div>
+        </div>
+        <div class="cat-pct"><span class="cat-pct-label">Em média</span>R$ ${cat.valorDesconto.toLocaleString('pt-BR', {minimumFractionDigits:2})}<small>OFF</small></div>
+      </div>`;
+    return cat.link
+      ? `<a class="cat-card" href="${cat.link}" target="_blank" rel="noopener">${inner}</a>`
+      : `<div class="cat-card">${inner}</div>`;
+  }).join('');
+
+  resultado.style.display = 'block';
+}
+
+async function consultar(){
+  const cpf = cpfInput.value.replace(/\D/g,'');
+  formMsg.innerHTML = '';
+  resultado.style.display = 'none';
+
+  if (cpf.length !== 11){
+    formMsg.innerHTML = `<div class="msg err">Digite um CPF válido, com 11 números.</div>`;
+    return;
+  }
+  if (PREVIEW){ mostrarResultado(EXEMPLO); resultado.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+  if (SCRIPT_URL.includes('COLE_AQUI')){
+    formMsg.innerHTML = `<div class="msg err">Backend não configurado ainda — cole a URL do Apps Script no HTML.</div>`;
+    return;
+  }
+
+  btnConsultar.disabled = true;
+  formMsg.innerHTML = `<div class="msg info">Consultando…</div>`;
+
+  try{
+    const res = await fetch(`${SCRIPT_URL}?action=consultarCashback&cpf=${cpf}`);
+    const data = await res.json();
+
+    if (!data.found){
+      formMsg.innerHTML = `<div class="msg err">CPF não encontrado. Confere o número digitado ou fale com a loja.</div>`;
+      btnConsultar.disabled = false;
+      return;
+    }
+
+    if (data.vencimento){
+      const vencDate = new Date(data.vencimento);
+      const hoje = new Date();
+      hoje.setHours(0,0,0,0);
+      vencDate.setHours(0,0,0,0);
+      if (vencDate < hoje){
+        formMsg.innerHTML = `<div class="msg err">Crédito expirado em ${vencDate.toLocaleDateString('pt-BR')}.</div>`;
+        btnConsultar.disabled = false;
+        return;
+      }
+    }
+
+    formMsg.innerHTML = '';
+    mostrarResultado(data);
+    resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }catch(err){
+    formMsg.innerHTML = `<div class="msg err">Não consegui consultar agora (${err.message}). Tenta de novo em instantes.</div>`;
+  }
+  btnConsultar.disabled = false;
+}
+
+// ==== Só para pré-visualização (não é usado com PREVIEW = false) ====
+const EXEMPLO = {
+  found: true, saldo: 84.15,
+  vencimento: new Date(Date.now() + 9*86400000).toISOString(),
+  categorias: [
+    { disponivel:true, nome:'Jeans', precoMin:99.9, valorDesconto:19.98, ribbon:'Mais vendido', imagem:'https://taco.vteximg.com.br/arquivos/ids/479039/22154_C051_1-CJNS-SLIM-MEDIO.jpg' },
+    { disponivel:true, nome:'Camisetas', precoMin:29.9, valorDesconto:5.98, imagem:'https://taco.vteximg.com.br/arquivos/ids/551745/23343_C009_1-GLO-EST-ALG-SILK-STREET-SKATER.jpg' },
+    { disponivel:true, nome:'Polos', precoMin:99.9, valorDesconto:19.98, imagem:'https://taco.vteximg.com.br/arquivos/ids/587819/23759_C009_1-POLO-BSC-FIT-MSC-C--ETQ.jpg' },
+    { disponivel:true, nome:'Calçados', precoMin:199.9, valorDesconto:39.98, imagem:'https://taco.vteximg.com.br/arquivos/ids/573702/23682_C027_1-TENIS-CANVAS-FLOR.jpg' },
+  ],
+};
+if (PREVIEW){
+  const bar = document.getElementById('previewBar');
+  bar.style.display = 'flex';
+  bar.querySelectorAll('button').forEach(b => b.addEventListener('click', () => aplicarTema(b.dataset.t)));
+  if (temaAtual === 'padrao') aplicarTema('bf');
+  cpfInput.value = '000.000.000-00';
+  mostrarResultado(EXEMPLO);
+}
+</script>
+</body>
+</html>
